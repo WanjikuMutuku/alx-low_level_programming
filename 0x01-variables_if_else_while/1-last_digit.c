@@ -1,9 +1,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
-/* more headers goes there */
-
-/* betty style doc for function main goes there */
+/**
+ * main - Entry point
+ *
+ * Return: Always 0 (Success)
+ */
 int main(void)
 {
 	int n, r;
@@ -21,7 +23,7 @@ int main(void)
 	}
 	else
 	{
-		printf("Last didgit of %d is %d and is less than 6 and 0\n", n, r);
+		printf("Last digit of %d is %d and is less than 6 and not 0\n", n, r);
 	}
 
 	return (0);
