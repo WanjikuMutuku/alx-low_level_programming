@@ -19,12 +19,11 @@ void print_rev(char *s)
 	count++;
 	}
 
-	e = count - 1;
+	e = count;
 	for (b = e - 1; b >= 0; b--)
 	{
 		_putchar(s[b]);
 	}
-	_putchar(' ');
 	_putchar('\n');
 
 }
