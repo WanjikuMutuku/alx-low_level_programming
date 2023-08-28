@@ -13,13 +13,6 @@
 char *_strchr(char *s, char c)
 {
 
-	if (strchr(s, c) != NULL)
-    {
-       printf(s, c);
-    }
-	else 
-	{
-		printf(s, c);
-	}
-    return (0);
+	return (strchr(s, c));
+	return (0);
 }
