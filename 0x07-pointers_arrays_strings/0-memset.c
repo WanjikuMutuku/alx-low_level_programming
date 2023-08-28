@@ -12,6 +12,6 @@
 
 char *_memset(char *s, char b, unsigned int n)
 {
-	memset(s, 0x01, n * b);
+	memset(s, 0x01, b * n);
 	return (s);
 }
