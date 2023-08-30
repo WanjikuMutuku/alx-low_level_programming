@@ -3,20 +3,32 @@
 #include <math.h>
 
 /**
- * _sqrt_recursion - returns the natural square root of a number.
+ * sqrt_checker - returns the natural square root of a number.
+ * @n: integer value.
+ * @divisor: base number to check
+ *
+ * Return: natural square root
+ */
+
+int sqrt_checker(int n, int divisor)
+{
+	if (n * n == divisor)
+	{
+		return (n);
+	}
+	if (n * n > divisor)
+	{
+		return (-1);
+	}
+	return (sqrt_checker(n + 1, divisor));
+}
+/**
+*_sqrt_recursion - returns the natural square root of a number.
  * @n: integer value.
  *
  * Return: Always 0.
  */
-
 int _sqrt_recursion(int n)
 {
-	
-	if (n == 0)
-	{
-		return (0);
-	
-	}
-	_putchar(sqrt(n));
-	return (0);
+	return (sqrt_checker(1, n));
 }
