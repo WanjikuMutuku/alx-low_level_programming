@@ -10,19 +10,9 @@
 
 void _print_rev_recursion(char *s)
 {
-	int count, b, e;
-
-	count = 0;
-
-	while (s[count] != '\0')
+	if (s[0] != '\0')
 	{
-	count++;
+		_print_rev_recursion(s + 1);
+		_putchar(s[0]);
 	}
-
-	e = count;
-	for (b = e - 1; b >= 0; b--)
-	{
-		_putchar(s[b]);
-	}
-
 }
