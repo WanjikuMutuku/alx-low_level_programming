@@ -1,6 +1,5 @@
 #include "main.h"
 #include <stdlib.h>
-
 /**
  * alloc_grid -  returns a pointer to a 2 dimensional array of integers.
  * @width: value of the columns
@@ -8,19 +7,17 @@
  *
  * Return: Alawys success
  */
-
 int **alloc_grid(int width, int height)
 {
 	int i = 0;
 	int j = 0;
 	int **grid;
+	int af = 0;
+	int k = 0;
 
 	if (width <= 0 && height <= 0)
-	{
 		return (NULL);
-	}
 	grid = (int **)malloc(height * sizeof(int *));
-
 	if (grid == NULL)
 	{
 		return (NULL);
@@ -30,13 +27,8 @@ int **alloc_grid(int width, int height)
 		grid[i] = (int *)malloc(width * sizeof(int));
 			if (grid[i] == NULL)
 			{
-				while (j < i)
-				{
-					free(grid[j]);
-					j++;
-				}
-				free(grid);
-				return (NULL);
+				af = 1;
+				break;
 			}
 			while (j < width)
 			{
@@ -44,6 +36,16 @@ int **alloc_grid(int width, int height)
 				j++;
 			}
 			i++;
+	}
+	if (af)
+	{
+		while (k < i)
+		{
+			free(grid[k]);
+			k++;
+		}
+		free(grid);
+		return (NULL);
 	}
 	return (grid);
 }
