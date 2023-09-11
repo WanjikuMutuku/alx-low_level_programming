@@ -2,8 +2,12 @@
 #define dog_h
 
 /**
- * struct dog: structer type for dog.
+ * struct dog - structer type for dog.
+ * @name: name of dog
+ * @age: age of dog.
+ * @owner: owner of dog.
  *
+ * Description: Attributes of a dog.
  */
 struct dog
 {
