@@ -5,7 +5,7 @@
 /**
  * print_name - Prints a name.
  * @name: character.
- * @f:pointe to the function print_name.
+ * @f: pointer to the function print_name.
  *
  * Return: void.
  */
