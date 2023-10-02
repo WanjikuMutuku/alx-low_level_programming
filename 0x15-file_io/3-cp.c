@@ -4,86 +4,107 @@
 #include <fcntl.h>
 
 #define BUFFER_SIZE 1024
-/**
- * error_exit - error messages.
- * @code: the program.
- * @message: error message.
- *
- * Return: void
- */
-void error_exit(int code, const char *message)
-{
-	dprintf(2, "%s\n", message);
-	exit(code);
-}
-/**
- * open_file - opens the file.
- * @filename: name of file.
- * @flags: the flags
- * @mode: the mode
- *
- * Return: file descriptor.
- */
-int open_file(const char *filename, int flags, mode_t mode)
-{
-	int fd = open(filename, flags, mode);
 
-	if (fd == -1)
+/**
+ * _close - close a file descriptor and print an error message upon failure
+ * @fd: the file descriptor to close
+ *
+ * Return: 0 upon success, -1 upon failure
+ */
+int _close(int fd)
+{
+	if (!close(fd))
+		return (0);
+	dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
+	return (-1);
+
+}
+
+/**
+ * _read - read from a file and print an error message upon failure
+ * @filename: the name of the file to read from
+ * @fd: the file descriptor to read from
+ * @buf: the buffer to write to
+ * @count: the number of bytes to read
+ *
+ * Return: The number of bytes read, or -1 upon failure
+ */
+ssize_t _read(const char *filename, int fd, char *buf, size_t count)
+{
+	ssize_t bytes_read = read(fd, buf, count);
+
+	if (bytes_read > -1)
+		return (bytes_read);
+	dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", filename);
+	return (-1);
+}
+
+/**
+ * _write - write to a file and print an error message upon failure
+ * @filename: the name of the file to write to
+ * @fd: the file descriptor to write to
+ * @buf: the buffer to read from
+ * @count: the number of bytes to write
+ *
+ * Return: The number of bytes written, or -1 upon failure
+ */
+ssize_t _write(const char *filename, int fd, const char *buf, size_t count)
+{
+	ssize_t bytes_written = write(fd, buf, count);
+
+	if (bytes_written > -1)
+		return (bytes_written);
+	dprintf(STDERR_FILENO, "Error: Can't write to %s\n", filename);
+	return (-1);
+}
+
+/**
+ * main - copy a file's contents to another file
+ * @argc: the argument count
+ * @argv: the argument values
+ *
+ * Return: Always 1
+ */
+int main(int argc, const char *argv[])
+{
+	int fd_in, fd_out;
+	ssize_t bytes_read;
+	char buffer[BUFSIZ];
+
+	if (argc != 3)
 	{
-		dprintf(2, "Error: Can't open file %s\n", filename);
+		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
+		exit(97);
+	}
+	fd_in = open(argv[1], O_RDONLY);
+	if (fd_in < 0)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 		exit(98);
 	}
-	return (fd);
-}
-/**
- * copy_file - copies the file.
- * @source: from this file
- * @dest: to this file.
- *
- * Return: Void
- */
-void copy_file(const char *source, const char *dest)
-{
-	int source_fd = open_file(source, O_RDONLY, 0);
-	int dest_fd = open_file(dest, O_WRONLY | O_CREAT | O_TRUNC,
-			S_IRUSR | S_IWUSR | S_IRGRP);
-	char buffer[BUFFER_SIZE];
-	ssize_t bytesRead, bytesWritten;
-
-	while ((bytesRead = read(source_fd, buffer, BUFFER_SIZE)) > 0)
+	fd_out = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	if (fd_out < 0)
 	{
-		bytesWritten = write(dest_fd, buffer, bytesRead);
-		if (bytesWritten == -1 || bytesWritten != bytesRead)
+		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
+		_close(fd_in);
+		exit(99);
+	}
+	while ((bytes_read = _read(argv[1], fd_in, buffer, BUFSIZ)))
+	{
+		if (bytes_read < 0)
 		{
-			dprintf(2, "Error: Can't write to file %s\n", dest);
-			close(source_fd);
-			close(dest_fd);
+			_close(fd_in);
+			_close(fd_out);
+			exit(98);
+		}
+		if (_write(argv[2], fd_out, buffer, bytes_read) < 0)
+		{
+			_close(fd_in);
+			_close(fd_out);
 			exit(99);
 		}
 	}
-	if (bytesRead == -1)
-	{
-		dprintf(2, "Error: Can't read from file %s\n", source);
-		close(source_fd);
-		close(dest_fd);
-		exit(98);
-	}
-	close(source_fd);
-	close(dest_fd);
-}
-/**
- * main - copies the content of a file to another file.
- * @argc: argument count
- * @argv: argument vector.
- *
- * Return: Always success.
- */
-int main(int argc, char *argv[])
-{
-	if (argc != 3)
-	{
-		error_exit(97, "Usage: cp file_from file_to");
-	}
-	copy_file(argv[1], argv[2]);
-	exit(0);
+	if ((_close(fd_in) | _close(fd_out)) < 0)
+		exit(100);
+	return (0);
 }
