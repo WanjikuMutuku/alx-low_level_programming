@@ -23,7 +23,7 @@ int append_text_to_file(const char *filename, char *text_content)
 		return (-1);
 	}
 	close(filedesc);
-	if (byteswritten == -1)
+	if (byteswritten < 0)
 	{
 		return (-1);
 	}
