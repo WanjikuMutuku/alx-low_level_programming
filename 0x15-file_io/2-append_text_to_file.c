@@ -32,11 +32,11 @@ int append_text_to_file(const char *filename, char *text_content)
 	int filedesc = open(filename, O_WRONLY | O_APPEND);
 	ssize_t byteswritten = write(filedesc, text_content, strlen(text_content));
 
-	if (filename == NULL)
+	if (!filename)
 	{
 		return (-1);
 	}
-	if (filedesc == -1)
+	if (filedesc < 0)
 	{
 		return (-1);
 	}
