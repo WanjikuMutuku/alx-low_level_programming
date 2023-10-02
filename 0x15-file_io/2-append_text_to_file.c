@@ -3,6 +3,24 @@
 #include <stdlib.h>
 
 /**
+ * _strlen - compute the length of a NULL-terminated string
+ * @str: the string to measure
+ *
+ * Return: the length of str, or -1 if str is NULL
+ */
+ssize_t _strlen(const char *str)
+{
+	ssize_t len = 0;
+
+	if (!str)
+		return (-1);
+
+	while (*str++)
+		++len;
+
+	return (len);
+}
+/**
  * append_text_to_file -  appends text at the end of a file.
  * @filename:  name of the file
  * @text_content: NULL terminated string to add at the end of the file
