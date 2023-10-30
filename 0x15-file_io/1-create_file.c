@@ -1,36 +1,53 @@
 #include "main.h"
-#include <fcntl.h>
-#include <string.h>
-#include <stdlib.h>
+#include <stddef.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <fcntl.h>
 /**
- * create_file - creates a file.
- * @filename: name of the file to create
- * @text_content: NULL terminated string to write to the file
+ * _strlen - counts string length
+ * @str: string to be used
  *
- * Return: 1 on success, -1 on failure.
+ * Return: length of the string
+ */
+int _strlen(char *str)
+{
+	int len = 0;
+
+	while (str[len] != '\0')
+		len++;
+	return (len);
+}
+
+/**
+ * create_file - creates a file
+ * @filename: name of the file
+ * @text_content: content of the file to be created
+ *
+ * Return: 1 on success, -1 otherwise
  */
 int create_file(const char *filename, char *text_content)
 {
-	int desc = open(filename, O_WRONLY | O_CREAT | O_TRUNC,
-			S_IRUSR | S_IWUSR);
-	ssize_t bytes_written = write(desc, text_content,
-			strlen(text_content));
+	int file, wrote;
 
 	if (filename == NULL)
-	{
 		return (-1);
-	}
-	if (desc == -1)
+	file = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	if (file == -1)
 		return (-1);
 	if (text_content != NULL)
 	{
-		if (bytes_written == -1)
+		wrote = write(file, text_content, _strlen(text_content));
+		if (wrote == -1)
 		{
-			close(desc);
+			close(file);
 			return (-1);
 		}
+		close(file);
+		return (1);
 	}
-	close(desc);
-	return (1);
+	else
+	{
+		close(file);
+		return (1);
+	}
 }
