@@ -10,4 +10,4 @@ for i in range(999, 99, -1):
             if (result > max_pal):
                 max_pal = result
 
-print (max_pal)
+print(max_pal)
