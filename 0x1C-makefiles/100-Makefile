@@ -1,0 +1,14 @@
+CC = gcc
+SRC = main.c school.c
+NAME = school
+all: $(SRC:%.c=%.o)
+	$(CC) $(CFLAGS) -o $@ $^
+$(SRC:%.c=%.o): %.o: %.c m.h
+	$(CC) $(CFLAGS) -c -o $@ $<
+clean:
+	$(RM) $(NAME) *~ *#
+oclean:
+	$(RM) $(SRC:%.c=%.o)
+fclean: clean oclean
+re: fclean all
+.PHONY: all clean oclean fclean re
