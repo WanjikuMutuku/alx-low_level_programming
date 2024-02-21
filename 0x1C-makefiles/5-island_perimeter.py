@@ -14,22 +14,19 @@ def island_perimeter(grid):
     Returns:
         int: The perimeter of the island.
     """
-    if not grid or not grid[0]:
-        return 0
+    c = 0
+    length = len(grid) - 1
+    width = len(grid[0]) - 1
 
-    perimeter = 0
-    rows = len(grid)
-    cols = len(grid[0])
-
-    for i in range(rows):
-        for j in range(cols):
-            if grid[i][j] == 1:
-                perimeter += 4  # Start with 4 sides
-
-                # Check neighbors (up, down, left, right)
-                if i > 0 and grid[i - 1][j] == 1:
-                    perimeter -= 2  # Subtract 2 for each shared side
-                    if j > 0 and grid[i][j - 1] == 1:
-                        perimeter -= 2  # Subtract 2 for each shared side
-
-                        return perimeter
+    for i, r in enumerate(grid):
+        for j, n in enumerate(r):
+            if n == 1:
+                if i == 0 or grid[i - 1][j] != 1:
+                    c += 1
+                if j == 0 or grid[i][j - 1] != 1:
+                    c += 1
+                if j == width or grid[i][j + 1] != 1:
+                    c += 1
+                if i == length or grid[i + 1][j] != 1:
+                    c += 1
+    return c
